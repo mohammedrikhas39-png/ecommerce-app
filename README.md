@@ -252,3 +252,4 @@ Follow these steps to initialize and push this project to GitHub:
    docker compose up -d --build
    ```
 6. Your application is live at port `3000` (frontend), `8080` (backend), and `27017` (MongoDB).
+

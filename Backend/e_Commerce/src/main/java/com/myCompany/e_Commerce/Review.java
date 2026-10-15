@@ -20,3 +20,4 @@ public class Review {
     private String comment;
     private Date createdAt = new Date();
 }
+
