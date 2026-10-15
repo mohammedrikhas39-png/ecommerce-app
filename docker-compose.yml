@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: ecommerce-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - ecommerce-net
+
+  backend:
+    build:
+      context: ./Backend/e_Commerce
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/ecommerce_db
+    depends_on:
+      - mongodb
+    networks:
+      - ecommerce-net
+
+  frontend:
+    build:
+      context: ./frontent
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_BASE_URL=http://localhost:8080/api
+    container_name: ecommerce-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - ecommerce-net
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  ecommerce-net:
+    driver: bridge
